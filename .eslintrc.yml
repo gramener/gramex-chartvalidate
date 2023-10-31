@@ -1,0 +1,10 @@
+# See https:#eslint.org/docs/user-guide/configuring
+root: true
+parserOptions:
+  ecmaVersion: latest
+  sourceType: commonjs
+env:
+  node: true
+  es2022: true
+# Use eslint recommended rules by default
+extends: eslint:recommended

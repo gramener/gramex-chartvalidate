@@ -1,0 +1,46 @@
+{
+  "name": "@gramex/chartvalidate",
+  "version": "1.0.0",
+  "description": "Validation library for @gramex charts",
+  "bin": {
+    "chartvalidate": "chartvalidate.js"
+  },
+  "scripts": {
+    "build": "eslint .",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "README.md",
+    "chartvalidate.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://code.gramener.com/gramex/gramex-chartvalidate"
+  },
+  "keywords": [
+    "gramex",
+    "chart",
+    "validation"
+  ],
+  "author": "S Anand <root.node@gmail.com>",
+  "contributors": [],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://code.gramener.com/gramex/gramex-chartvalidate/-/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "prettier": {
+    "printWidth": 120
+  },
+  "devDependencies": {
+    "eslint": "^8.41.0",
+    "prettier": "^3.0.2"
+  },
+  "dependencies": {
+    "semver": "^7.5.4",
+    "yaml": "^2.3.2"
+  }
+}
