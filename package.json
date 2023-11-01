@@ -1,13 +1,14 @@
 {
   "name": "@gramex/chartvalidate",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Validation library for @gramex charts",
   "bin": {
     "chartvalidate": "chartvalidate.js"
   },
   "scripts": {
-    "build": "eslint .",
-    "prepublishOnly": "npm run build"
+    "lint": "prettier --write '**/*.{js,mjs,ts,md,json}' && eslint",
+    "build": "",
+    "prepublishOnly": "npm run lint && npm run build"
   },
   "files": [
     "README.md",
@@ -40,6 +41,7 @@
     "prettier": "^3.0.2"
   },
   "dependencies": {
+    "minimatch": "^9.0.3",
     "semver": "^7.5.4",
     "yaml": "^2.3.2"
   }

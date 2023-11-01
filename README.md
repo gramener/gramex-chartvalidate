@@ -4,18 +4,12 @@
 
 A validation library for @gramex charts.
 
-- [Usage](#usage)
-- [Features](#features)
-- [Testing](#testing)
-- [Contribution](#contribution)
-- [License](#license)
-
 ## Usage
 
 To validate the contents of your package, run:
 
 ```bash
-npx @gramex/chartvalidate | npx faucet
+npx -y @gramex/chartvalidate
 ```
 
 **NO NEED TO INSTALL** - `npx` will automatically install the packages if it's not already installed.
@@ -31,9 +25,10 @@ This library runs the following tests:
 - package.json "module" should begin with "dist/" and end with ".js"
 - package.json "browser" should be the same as "module" but end with ".min.js" instead of ".js"
 - package.json "scripts.build" should be defined
-- package.json "scripts.prepublishOnly" should be "npm run build"
+- package.json "scripts.lint" should run prettier and eslint
+- package.json "scripts.prepublishOnly" should lint and build
 - package.json "scripts.prepublish" should not be defined
-- package.json "files" should be an array that contains at least "README.md" and "dist/\*"
+- package.json "files" should include "README.md", module, browser
 - package.json "repository" should point to a {type: git, url: "git+https://code.gramener.com/..."}
 - package.json "keywords" should be defined
 - package.json "author" should be defined

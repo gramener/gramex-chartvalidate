@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require("fs");
+const minimatch = require("minimatch").minimatch;
 const assert = require("assert");
 const semver = require("semver");
 
@@ -58,19 +59,26 @@ runTest('package.json "scripts.build" should be defined', () => {
   assert.ok(package.scripts.build);
 });
 
-runTest('package.json "scripts.prepublishOnly" should be "npm run build"', () => {
+runTest('package.json "scripts.prepublishOnly" should lint and build"', () => {
   assert.ok(package.scripts);
-  assert.equal(package.scripts.prepublishOnly, "npm run build");
+  assert.equal(package.scripts.prepublishOnly, "npm run lint && npm run build");
+});
+
+runTest('package.json "scripts.lint" should run prettier and eslint', () => {
+  assert.ok(package.scripts);
+  assert.ok(package.scripts.lint.includes("prettier"));
+  assert.ok(package.scripts.lint.includes("eslint"));
 });
 
 runTest('package.json "scripts.prepublish" should not be defined', () => {
   assert.ok(!package.scripts.prepublish);
 });
 
-runTest('package.json "files" should be an array that contains at least "README.md" and "dist/*"', () => {
+runTest('package.json "files" should include "README.md", module, browser', () => {
   assert.ok(Array.isArray(package.files));
-  assert.ok(package.files.includes("README.md"));
-  assert.ok(package.files.includes("dist/*"));
+  assert.ok(package.files.some((pattern) => minimatch("README.md", pattern)));
+  assert.ok(!package.module || package.files.some((pattern) => minimatch(package.module, pattern)));
+  assert.ok(!package.browser || package.files.some((pattern) => minimatch(package.browser, pattern)));
 });
 
 runTest('package.json "repository" should point to a {type: git, url: "git+https://code.gramener.com/..."}', () => {
