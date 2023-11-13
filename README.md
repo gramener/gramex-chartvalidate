@@ -4,7 +4,7 @@
 
 A validation library for @gramex charts.
 
-## Usage
+## Example
 
 To validate the contents of your package, run:
 
@@ -12,7 +12,15 @@ To validate the contents of your package, run:
 npx -y @gramex/chartvalidate
 ```
 
+## Installation
+
 **NO NEED TO INSTALL** - `npx` will automatically install the packages if it's not already installed.
+
+Just run:
+
+```bash
+npx @gramex/chartvalidate | npx faucet
+```
 
 ## Tests
 
@@ -40,15 +48,22 @@ This library runs the following tests:
 - .gitlab-ci.yml should be a valid YAML file
 - .gitlab-ci.yml should validate build errors
 - .gitlab-ci.yml should deploy to package.homepage as static (if defined)
+- README.md should begin with a H1 with the package name
+- README.md should have "Example" as the first H2
+- README.md should have the next 2nd-level heading as "Installation"
+- README.md should an "API" 2nd-level heading
+- README.md should end with Release Notes, Authors and License 2nd-level headings
 
-# Contributing
+## API
+
+## Contributing
 
 - Fork the repository and clone the fork to your machine.
 - Run `npm install` to install dependencies
 - Edit [`chartvalidate.js`](chartvalidate.js), documenting your changes
 - Push your changes back to your fork on GitHub and submit a pull request to the main repository.
 
-# Release
+## Release
 
 ```shell
 npm version minor
@@ -56,14 +71,20 @@ npm publish
 git push --follow-tags
 ```
 
-## Release notes
-
-- 1.0.0: 31 Oct 2023. Initial release
-
-## License
-
-MIT
-
 ## Support
 
 If you encounter any problems or have suggestions, please [open an issue](https://code.gramener.com/gramex/gramex-chartvalidate/-/issues) or submit a pull request.
+
+## Release notes
+
+- 1.3.0: 13 Nov 2023. Add README.md header validations
+- 1.2.0: 1 Nov 2023. Add linting
+- 1.0.0: 31 Oct 2023. Initial release
+
+## Authors
+
+- Anand S <s.anand@gramener.com>
+
+## License
+
+[MIT](https://spdx.org/licenses/MIT.html)

@@ -4,6 +4,7 @@ const fs = require("fs");
 const minimatch = require("minimatch").minimatch;
 const assert = require("assert");
 const semver = require("semver");
+const marked = require("marked");
 
 let testCount = 0;
 const calls = [];
@@ -143,6 +144,34 @@ runTest(".gitlab-ci.yml should deploy to package.homepage as static (if defined)
   assert.equal(ci_yml.deploy.variables.URL, `gramex-${package.name.split("/").at(1)}`);
   assert.equal(ci_yml.deploy.variables.VERSION, "static");
   assert.equal(ci_yml.deploy.variables.SETUP, "npm install && npm run build");
+});
+
+const tokens = marked.lexer(fs.readFileSync("README.md", "utf8"));
+const headings = tokens.filter((token) => token.type === "heading");
+
+runTest("README.md should begin with a H1 with the package name", () => {
+  assert.equal(headings[0].depth, 1);
+  assert.equal(headings[0].text, package.name);
+});
+
+runTest('README.md should have "Example" as the first H2', () => {
+  assert.equal(headings[1].depth, 2);
+  assert.equal(headings[1].text, "Example");
+});
+
+runTest('README.md should have the next 2nd-level heading as "Installation"', () => {
+  assert.equal(headings[2].depth, 2);
+  assert.equal(headings[2].text, "Installation");
+});
+
+runTest('README.md should an "API" 2nd-level heading', () => {
+  assert.ok(headings.some((h) => h.depth === 2 && h.text === "API"));
+});
+
+runTest("README.md should end with Release Notes, Authors and License 2nd-level headings", () => {
+  const last3 = headings.slice(-3);
+  assert.ok(last3.every((h) => h.depth === 2));
+  assert.equal(last3.map((h) => h.text).join(), "Release notes,Authors,License");
 });
 
 console.log("TAP version 14");
