@@ -50,6 +50,7 @@ This library runs the following tests:
 - .gitlab-ci.yml should validate build errors
 - .gitlab-ci.yml should deploy to package.homepage as static (if defined)
 - README.md should begin with a H1 with the package name
+- README.md should have package.description between the first 2 headings
 - README.md should have "Example" as the first H2
 - README.md should have the next 2nd-level heading as "Installation"
 - README.md should an "API" 2nd-level heading

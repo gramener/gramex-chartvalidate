@@ -157,7 +157,8 @@ runTest(".gitlab-ci.yml should deploy to package.homepage as static (if defined)
   assert.equal(ci_yml.deploy.variables.SETUP, "npm install && npm run build");
 });
 
-const tokens = marked.lexer(fs.readFileSync("README.md", "utf8"));
+const readmeContent = fs.readFileSync("README.md", "utf8");
+const tokens = marked.lexer(readmeContent);
 const headings = tokens.filter((token) => token.type === "heading");
 
 runTest("README.md should begin with a H1 with the package name", () => {
@@ -183,6 +184,13 @@ runTest("README.md should end with Release Notes, Authors and License 2nd-level 
   const last3 = headings.slice(-3);
   assert.ok(last3.every((h) => h.depth === 2));
   assert.equal(last3.map((h) => h.text).join(), "Release notes,Authors,License");
+});
+
+runTest("README.md should have package.description between the first 2 headings", () => {
+  const firstHeadingIndex = readmeContent.indexOf(headings[0].raw);
+  const secondHeadingIndex = readmeContent.indexOf(headings[1].raw);
+  const descriptionIndex = readmeContent.indexOf(package.description);
+  assert.ok(descriptionIndex > firstHeadingIndex && descriptionIndex < secondHeadingIndex);
 });
 
 console.log("TAP version 14");
