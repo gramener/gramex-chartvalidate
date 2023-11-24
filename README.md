@@ -31,7 +31,8 @@ This library runs the following tests:
 - package.json "version" should be a valid semver and greater than 1.0.0
 - package.json "description" property should exist
 - package.json "module" should begin with "dist/" and end with ".js"
-- package.json "browser" should be the same as "module" but end with ".min.js" instead of ".js"
+- package.json "main" should be the same as "module" but end with ".min.js" instead of ".js"
+- package.json "browser" should not be defined
 - package.json "scripts.build" should be defined
 - package.json "scripts.lint" should run prettier and eslint
 - package.json "scripts.prepublishOnly" should lint and build
@@ -77,6 +78,7 @@ If you encounter any problems or have suggestions, please [open an issue](https:
 
 ## Release notes
 
+- 1.4.0: 24 Nov 2023. Use "main" instead of "browser" for IIFE path in package.json
 - 1.3.0: 13 Nov 2023. Add README.md header validations
 - 1.2.0: 1 Nov 2023. Add linting
 - 1.0.0: 31 Oct 2023. Initial release

@@ -43,26 +43,24 @@ runTest('package.json "description" property should exist', () => {
   assert.ok(package.description);
 });
 
-// Additional tests
 runTest('package.json "module" should begin with "dist/" and end with ".js"', () => {
   assert.ok(package.module);
   assert.ok(package.module.startsWith("dist/"));
   assert.ok(package.module.endsWith(".js"));
 });
 
-runTest('package.json "browser" should be the same as "module" but end with ".min.js" instead of ".js"', () => {
-  assert.ok(package.browser);
-  assert.equal(package.browser, package.module.replace(/\.js$/, ".min.js"));
+runTest('package.json "main" should be the same as "module" but end with ".min.js" instead of ".js"', () => {
+  assert.ok(package.main);
+  assert.equal(package.main, package.module.replace(/\.js$/, ".min.js"));
+});
+
+runTest('package.json "browser" not be defined', () => {
+  assert.ok(!package.browser);
 });
 
 runTest('package.json "scripts.build" should be defined', () => {
   assert.ok(package.scripts);
   assert.ok(package.scripts.build);
-});
-
-runTest('package.json "scripts.prepublishOnly" should lint and build"', () => {
-  assert.ok(package.scripts);
-  assert.equal(package.scripts.prepublishOnly, "npm run lint && npm run build");
 });
 
 runTest('package.json "scripts.lint" should run prettier and eslint', () => {
@@ -71,8 +69,21 @@ runTest('package.json "scripts.lint" should run prettier and eslint', () => {
   assert.ok(package.scripts.lint.includes("eslint"));
 });
 
+runTest('package.json "scripts.prepublishOnly" should lint and build"', () => {
+  assert.ok(package.scripts);
+  assert.ok(package.scripts.prepublishOnly.includes("npm run lint"));
+  assert.ok(
+    package.scripts.prepublishOnly.includes("npm run build") || package.scripts.prepublishOnly.includes("npm test"),
+  );
+});
+
 runTest('package.json "scripts.prepublish" should not be defined', () => {
   assert.ok(!package.scripts.prepublish);
+});
+
+runTest('package.json "scripts.pretest" should build if "scripts.test" exists"', () => {
+  if (!package.scripts.test) return;
+  assert.ok(package.scripts.pretest.includes("npm run build"));
 });
 
 runTest('package.json "files" should include "README.md", module, browser', () => {
