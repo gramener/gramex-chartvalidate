@@ -108,8 +108,8 @@ runTest('package.json "bugs" should point the same code base as repository, but 
   assert.equal(pkg.bugs.url, `${pkg.repository.url.replace("git@", "https://").replace(".git", "")}/issues`);
 });
 
-runTest('package.json "homepage" is at https://gramener.com/gramex-<name>/ (if defined)', () => {
-  if (pkg.homepage) assert.equal(pkg.homepage, `https://gramener.com/gramex-${pkg.name.split("/").at(1)}/`);
+runTest('package.json "homepage" is at `https://gramener.github.io/gramex-<name>/` (if defined)', () => {
+  if (pkg.homepage) assert.equal(pkg.homepage, `https://gramener.github.io/gramex-${pkg.name.split("/").at(1)}/`);
 });
 
 runTest('package.json "publishConfig" should push to https://registry.npmjs.org/', () => {

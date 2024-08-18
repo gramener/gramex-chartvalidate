@@ -38,13 +38,13 @@ This library runs the following tests:
 - package.json "scripts.prepublish" should not be defined
 - package.json "scripts.pretest" should build if "scripts.test" exists"
 - package.json "files" should include "README.md", module, browser
-- package.json "repository" should point to a {type: git, url: "git@github.com/gramener/..."}
+- package.json "repository" should point to a {type: git, url: `git@github.com/gramener/...`}
 - package.json "keywords" should be defined
 - package.json "author" should be defined
 - package.json "license" should be "MIT"
 - package.json "bugs" should point the same code base as repository, but with "/issues" added
-- package.json "homepage" is at https://gramener.com/gramex-<name>/ (if defined)
-- package.json "publishConfig" should push to https://registry.npmjs.org/
+- package.json "homepage" is at `https://gramener.github.io/gramex-<name>/` (if defined)
+- package.json "publishConfig" should push to `https://registry.npmjs.org/`
 - .gitlab-ci.yml should be a valid YAML file
 - .gitlab-ci.yml should validate build errors
 - .gitlab-ci.yml should deploy to package.homepage as static (if defined)
