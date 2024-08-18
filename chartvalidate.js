@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-const minimatch = require("minimatch").minimatch;
-const assert = require("assert");
-const semver = require("semver");
-const marked = require("marked");
+import fs from "fs";
+import { minimatch } from "minimatch";
+import assert from "assert";
+import semver from "semver";
+import * as marked from "marked";
+import YAML from "yaml";
 
 let testCount = 0;
 const calls = [];
@@ -22,116 +23,100 @@ function runTest(description, testFn) {
   });
 }
 
-let package;
+let pkg;
 runTest("package.json should be a valid JSON file", () => {
-  package = JSON.parse(fs.readFileSync("package.json", "utf8"));
-  assert.ok(package);
+  pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+  assert.ok(pkg);
 });
 
 runTest('package.json "name" property should start with "@gramex/"', () => {
-  assert.ok(package.name);
-  assert.ok(package.name.startsWith("@gramex/"));
+  assert.ok(pkg.name);
+  assert.ok(pkg.name.startsWith("@gramex/"));
 });
 
 runTest('package.json "version" should be a valid semver and greater than 1.0.0', () => {
-  assert.ok(package.version);
-  assert.ok(semver.valid(package.version));
-  assert.ok(semver.gte(package.version, "1.0.0"));
+  assert.ok(pkg.version);
+  assert.ok(semver.valid(pkg.version));
+  assert.ok(semver.gte(pkg.version, "1.0.0"));
 });
 
 runTest('package.json "description" property should exist', () => {
-  assert.ok(package.description);
+  assert.ok(pkg.description);
 });
 
 runTest('package.json "module" should begin with "dist/" and end with ".js"', () => {
-  assert.ok(package.module);
-  assert.ok(package.module.startsWith("dist/"));
-  assert.ok(package.module.endsWith(".js"));
+  assert.ok(pkg.module);
+  assert.ok(pkg.module.startsWith("dist/"));
+  assert.ok(pkg.module.endsWith(".js"));
 });
 
 runTest('package.json "main" should be the same as "module" but end with ".min.js" instead of ".js"', () => {
-  assert.ok(package.main);
-  assert.equal(package.main, package.module.replace(/\.js$/, ".min.js"));
+  assert.ok(pkg.main);
+  assert.equal(pkg.main, pkg.module.replace(/\.js$/, ".min.js"));
 });
 
-runTest('package.json "browser" not be defined', () => {
-  assert.ok(!package.browser);
+runTest('package.json "browser" should not be defined', () => {
+  assert.ok(!pkg.browser);
 });
 
 runTest('package.json "scripts.build" should be defined', () => {
-  assert.ok(package.scripts);
-  assert.ok(package.scripts.build);
+  assert.ok(pkg.scripts);
+  assert.ok(pkg.scripts.build);
 });
 
-runTest('package.json "scripts.lint" should run prettier and eslint', () => {
-  assert.ok(package.scripts);
-  assert.ok(package.scripts.lint.includes("prettier"));
-  assert.ok(package.scripts.lint.includes("eslint"));
-});
-
-runTest('package.json "scripts.prepublishOnly" should lint and build"', () => {
-  assert.ok(package.scripts);
-  assert.ok(package.scripts.prepublishOnly.includes("npm run lint"));
-  assert.ok(
-    package.scripts.prepublishOnly.includes("npm run build") || package.scripts.prepublishOnly.includes("npm test"),
-  );
+runTest('package.json "scripts.prepublishOnly" should build"', () => {
+  assert.ok(pkg.scripts);
+  assert.ok(pkg.scripts.prepublishOnly.includes("npm run build") || pkg.scripts.prepublishOnly.includes("npm test"));
 });
 
 runTest('package.json "scripts.prepublish" should not be defined', () => {
-  assert.ok(!package.scripts.prepublish);
+  assert.ok(!pkg.scripts.prepublish);
 });
 
 runTest('package.json "scripts.pretest" should build if "scripts.test" exists"', () => {
-  if (!package.scripts.test) return;
-  assert.ok(package.scripts.pretest.includes("npm run build"));
+  if (!pkg.scripts.test) return;
+  if (pkg.scripts.pretest) assert.ok(pkg.scripts.pretest.includes("npm run build"));
 });
 
 runTest('package.json "files" should include "README.md", module, browser', () => {
-  assert.ok(Array.isArray(package.files));
-  assert.ok(package.files.some((pattern) => minimatch("README.md", pattern)));
-  assert.ok(!package.module || package.files.some((pattern) => minimatch(package.module, pattern)));
-  assert.ok(!package.browser || package.files.some((pattern) => minimatch(package.browser, pattern)));
+  assert.ok(Array.isArray(pkg.files));
+  assert.ok(pkg.files.some((pattern) => minimatch("README.md", pattern)));
+  assert.ok(!pkg.module || pkg.files.some((pattern) => minimatch(pkg.module, pattern)));
+  assert.ok(!pkg.browser || pkg.files.some((pattern) => minimatch(pkg.browser, pattern)));
 });
 
-runTest('package.json "repository" should point to a {type: git, url: "git+https://code.gramener.com/..."}', () => {
-  assert.ok(package.repository);
-  assert.equal(package.repository.type, "git");
-  assert.ok(package.repository.url.startsWith("git+https://code.gramener.com/"));
+runTest('package.json "repository" should point to a {type: git, url: "git@github.com/gramener/..."}', () => {
+  assert.ok(pkg.repository);
+  assert.equal(pkg.repository.type, "git");
+  assert.ok(pkg.repository.url.startsWith("git@github.com/gramener/"));
 });
 
 runTest('package.json "keywords" should be defined', () => {
-  assert.ok(Array.isArray(package.keywords));
+  assert.ok(Array.isArray(pkg.keywords));
 });
 
 runTest('package.json "author" should be defined', () => {
-  assert.ok(package.author);
+  assert.ok(pkg.author);
 });
 
 runTest('package.json "license" should be "MIT"', () => {
-  assert.equal(package.license, "MIT");
+  assert.equal(pkg.license, "MIT");
 });
 
-runTest('package.json "bugs" should point the same code base as repository, but with "/-/issues" added', () => {
-  assert.ok(package.bugs);
-  assert.equal(package.bugs.url, `${package.repository.url.replace("git+", "").replace(".git", "")}/-/issues`);
-});
-
-runTest('package.json "prettier" should have a "printWidth" of 100 or more', () => {
-  assert.ok(package.prettier);
-  assert.ok(package.prettier.printWidth >= 100);
+runTest('package.json "bugs" should point the same code base as repository, but with "/issues" added', () => {
+  assert.ok(pkg.bugs);
+  assert.equal(pkg.bugs.url, `${pkg.repository.url.replace("git@", "https://").replace(".git", "")}/issues`);
 });
 
 runTest('package.json "homepage" is at https://gramener.com/gramex-<name>/ (if defined)', () => {
-  if (package.homepage) assert.equal(package.homepage, `https://gramener.com/gramex-${package.name.split("/").at(1)}/`);
+  if (pkg.homepage) assert.equal(pkg.homepage, `https://gramener.com/gramex-${pkg.name.split("/").at(1)}/`);
 });
 
 runTest('package.json "publishConfig" should push to https://registry.npmjs.org/', () => {
-  assert.ok(package.publishConfig);
-  assert.equal(package.publishConfig.access, "public");
-  assert.equal(package.publishConfig.registry, "https://registry.npmjs.org/");
+  assert.ok(pkg.publishConfig);
+  assert.equal(pkg.publishConfig.access, "public");
+  assert.equal(pkg.publishConfig.registry, "https://registry.npmjs.org/");
 });
-
-const YAML = require("yaml");
 
 let ci_yml;
 runTest(".gitlab-ci.yml should be a valid YAML file", () => {
@@ -147,12 +132,12 @@ runTest(".gitlab-ci.yml should validate build errors", () => {
 });
 
 runTest(".gitlab-ci.yml should deploy to package.homepage as static (if defined)", () => {
-  if (!package.homepage) return;
+  if (!pkg.homepage) return;
   assert.ok(ci_yml.deploy);
   assert.equal(ci_yml.deploy.script, "deploy");
   assert.ok(ci_yml.deploy.variables);
   assert.equal(ci_yml.deploy.variables.SERVER, "gramener.com");
-  assert.equal(ci_yml.deploy.variables.URL, `gramex-${package.name.split("/").at(1)}`);
+  assert.equal(ci_yml.deploy.variables.URL, `gramex-${pkg.name.split("/").at(1)}`);
   assert.equal(ci_yml.deploy.variables.VERSION, "static");
   assert.equal(ci_yml.deploy.variables.SETUP, "npm install && npm run build");
 });
@@ -163,7 +148,7 @@ const headings = tokens.filter((token) => token.type === "heading");
 
 runTest("README.md should begin with a H1 with the package name", () => {
   assert.equal(headings[0].depth, 1);
-  assert.equal(headings[0].text, package.name);
+  assert.equal(headings[0].text, pkg.name);
 });
 
 runTest('README.md should have "Example" as the first H2', () => {
@@ -189,7 +174,7 @@ runTest("README.md should end with Release Notes, Authors and License 2nd-level 
 runTest("README.md should have package.description between the first 2 headings", () => {
   const firstHeadingIndex = readmeContent.indexOf(headings[0].raw);
   const secondHeadingIndex = readmeContent.indexOf(headings[1].raw);
-  const descriptionIndex = readmeContent.indexOf(package.description);
+  const descriptionIndex = readmeContent.indexOf(pkg.description);
   assert.ok(descriptionIndex > firstHeadingIndex && descriptionIndex < secondHeadingIndex);
 });
 

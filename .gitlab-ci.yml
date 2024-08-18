@@ -1,3 +1,0 @@
-validate:
-  image: gramener/builderrors
-  script: builderrors

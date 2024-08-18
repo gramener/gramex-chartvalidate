@@ -34,27 +34,26 @@ This library runs the following tests:
 - package.json "main" should be the same as "module" but end with ".min.js" instead of ".js"
 - package.json "browser" should not be defined
 - package.json "scripts.build" should be defined
-- package.json "scripts.lint" should run prettier and eslint
-- package.json "scripts.prepublishOnly" should lint and build
+- package.json "scripts.prepublishOnly" should build
 - package.json "scripts.prepublish" should not be defined
+- package.json "scripts.pretest" should build if "scripts.test" exists"
 - package.json "files" should include "README.md", module, browser
-- package.json "repository" should point to a {type: git, url: "git+https://code.gramener.com/..."}
+- package.json "repository" should point to a {type: git, url: "git@github.com/gramener/..."}
 - package.json "keywords" should be defined
 - package.json "author" should be defined
 - package.json "license" should be "MIT"
-- package.json "bugs" should point the same code base as repository, but with "/-/issues" added
-- package.json "prettier" should have a "printWidth" of 100 or more
+- package.json "bugs" should point the same code base as repository, but with "/issues" added
 - package.json "homepage" is at https://gramener.com/gramex-<name>/ (if defined)
 - package.json "publishConfig" should push to https://registry.npmjs.org/
 - .gitlab-ci.yml should be a valid YAML file
 - .gitlab-ci.yml should validate build errors
 - .gitlab-ci.yml should deploy to package.homepage as static (if defined)
 - README.md should begin with a H1 with the package name
-- README.md should have package.description between the first 2 headings
 - README.md should have "Example" as the first H2
 - README.md should have the next 2nd-level heading as "Installation"
 - README.md should an "API" 2nd-level heading
 - README.md should end with Release Notes, Authors and License 2nd-level headings
+- README.md should have package.description between the first 2 headings
 
 ## API
 
@@ -79,6 +78,7 @@ If you encounter any problems or have suggestions, please [open an issue](https:
 
 ## Release notes
 
+- 1.5.0: 18 Aug 2024. Use Github deployments, switch to ESM
 - 1.4.0: 24 Nov 2023. Use "main" instead of "browser" for IIFE path in package.json
 - 1.3.0: 13 Nov 2023. Add README.md header validations
 - 1.2.0: 1 Nov 2023. Add linting
@@ -86,7 +86,7 @@ If you encounter any problems or have suggestions, please [open an issue](https:
 
 ## Authors
 
-- Anand S <s.anand@gramener.com>
+- Anand S <root.node@gmail.com>
 
 ## License
 
